@@ -24,11 +24,6 @@ import multiprocessing
 
 
 
-# Evaluate a given model using 5-fold cross-validation
-def evaluate_model(model, X, y):
-    return cross_val_score(model, X, y, scoring='accuracy', cv=5)
-
-
 # Sequential selection
 def seq_sel(sel_feats, X_enet, Y_data):
     
@@ -65,6 +60,25 @@ def seq_sel(sel_feats, X_enet, Y_data):
     return [sel_feats, best_accuracy]
 
 
+def worker(feature_idx, sel_feats, X_train, y_train):
+
+    # Try adding the feature to the selected set
+    trial_features = sel_feats + [feature_idx]
+    X_subset = X_train.iloc[:, trial_features]
+    
+    # Evaluation
+    acc = np.mean([evaluate_model(md, X_subset, y_train) for md in model_list]) # evaluation accuracy
+    print(f'Worker {feature_idx}')
+    
+    return [acc, feature_idx] 
+
+
+
+# Evaluate a given model using 5-fold cross-validation
+def evaluate_model(model, X, y):
+    return cross_val_score(model, X, y, scoring='accuracy', cv=5)
+
+
 
 if __name__ == "__main__":
         
@@ -72,7 +86,7 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     num_cores = multiprocessing.cpu_count()
     plotting = True
-    TOP_PERFORMANCE = 1
+    TOP_PERFORMANCE = 10
 
     # Get data
     data = pd.read_csv('data_0802.csv', encoding='utf-8')
@@ -108,16 +122,56 @@ if __name__ == "__main__":
         sel_columns_id_list.append(sel_columns_id)
 
 
-    # Create a Pool of worker processes
-    with multiprocessing.Pool(processes=num_cores) as pool:
-        # Use the map function to apply the perform_calculation function to each iteration in parallel
-        results = pool.starmap(seq_sel, [(sel_ft, X_enet, Y_data) for sel_ft in sel_columns_id_list])
     
+    X_train, X_test, y_train, y_test = train_test_split(X_enet, Y_data, test_size=0.2, random_state=42)
+    y_train, y_test = y_train.tolist(), y_test.tolist()
+
+    
+    total_acc, total_sel_feats, total = [], [], []
+    
+    # Start searching
+    for sel_feats in sel_columns_id_list:
+        best_accuracy = 0
         
-    # Open the file in write mode
-    with open("seq_sel_raw.txt", "w") as file:
-        file.write(results + "\n")
+        # Perform forward feature selection
+        while len(sel_feats) < X_train.shape[1]:
+            print(f'Epoch record: {len(sel_feats)}')
+            
+            best_feature = None
+            
+            with multiprocessing.Pool(processes=num_cores) as pool:
+                results = pool.starmap(worker, [(feature_idx, sel_feats, X_train, y_train) for feature_idx in range(X_train.shape[1]) if feature_idx not in sel_feats])
+            
+            acc, feat_idx = [r[0] for r in results], [r[1] for r in results]
+            
+            if max(acc) > best_accuracy:
+                best_accuracy = max(acc)
+                best_feature = feat_idx[acc.index(best_accuracy)]
+        
+            
+            '''Break if adding any feature can't improve the model performance'''
+            if best_feature is not None:
+                sel_feats.append(best_feature)
+                print(f"Selected feature: {best_feature}, Best accuracy: {best_accuracy:.2f}")
+            else: break
+            
+        # End of while
+        
+        
+        total_acc.append(best_accuracy)
+        total_sel_feats.append(sel_feats)
+        total.append([sel_feats, best_accuracy])
 
 
+    print(total_acc)
+    print(total_sel_feats)
+
+    print("Start storing files!")
+    data_pd = pd.DataFrame(total, columns=['features', 'performance'])
+    data_pd.to_csv(f'seq_sel_top_{TOP_PERFORMANCE}.csv')
+    print("Successfully stored!")
+
+        
+    
 
 
