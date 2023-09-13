@@ -117,5 +117,5 @@ ohe_pd = pd.DataFrame(ohe_data, columns=ohe_cat)
 
 # Mix the data
 mix_pd = pd.concat([orig_pd, ohe_pd], axis=1).reset_index(drop=True)
-mix_pd.to_csv('../Data/data_0802.csv')
+mix_pd.to_csv('data_0802.csv')
 
