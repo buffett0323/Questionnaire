@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 plotting = True
 
 # Read data
-data = pd.read_csv('data_0802.csv', encoding='utf-8')
+data = pd.read_csv('data/data_0802.csv', encoding='utf-8')
 data = data.drop(data.columns[0], axis=1)
 X_columns = [c for c in data.columns if c != '已填寫問卷數量']
 
@@ -46,7 +46,7 @@ X_enet = X_data_scaled[selected_features]
 X_train, X_test, y_train, y_test = train_test_split(X_enet, Y_data, test_size=0.2, random_state=42)
 
 # Top performance
-top_perf = pd.read_csv('seq_sel_top_10.csv', encoding='utf-8')
+top_perf = pd.read_csv('data/seq_sel_top_10.csv', encoding='utf-8')
 summary_list, feat_sel_list = [], []
 for i, j in tqdm(top_perf.iterrows()):
     sel_feat = j[1][1:-1].split(', ')

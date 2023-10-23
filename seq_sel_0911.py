@@ -18,7 +18,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, mean_squar
 from sklearn import metrics, model_selection, svm
 from sklearn.naive_bayes import GaussianNB
 from tqdm import tqdm
-from get_model_tuned import model_list, model_name_list
+from get_model import model_list, model_name_list
 import warnings
 import multiprocessing
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     TOP_PERFORMANCE = 10
 
     # Get data
-    data = pd.read_csv('data_0802.csv', encoding='utf-8')
+    data = pd.read_csv('data/data_0802.csv', encoding='utf-8')
     data = data.drop(data.columns[0], axis=1)
     X_columns = [c for c in data.columns if c != '已填寫問卷數量']
 
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     X_enet = X_data_scaled[selected_features]
 
     # Read data and select top 5 performance
-    res = pd.read_csv('mp_res_0910.csv', encoding='utf-8')
+    res = pd.read_csv('data/mp_res_0910.csv', encoding='utf-8')
     perf = res['performance'].tolist()
     perf_sort_id = sorted(range(len(perf)), key=lambda i: perf[i], reverse=True)
 

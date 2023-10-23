@@ -13,7 +13,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, mean_squar
 from sklearn import metrics, model_selection, svm
 from sklearn.naive_bayes import GaussianNB
 from tqdm import tqdm
-from get_model_tuned import model_list, model_name_list
+from get_model import model_list, model_name_list
 import multiprocessing
 import warnings
 import random
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     RANDOM_EPOCHS = 1000
 
     # Read data
-    data = pd.read_csv('data_0802.csv', encoding='utf-8')
+    data = pd.read_csv('data/data_0802.csv', encoding='utf-8')
     data = data.drop(data.columns[0], axis=1)
     X_columns = [c for c in data.columns if c != '已填寫問卷數量']
 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     
     print("Start storing files!")
     data_pd = pd.DataFrame(results, columns=['features', 'performance'])
-    data_pd.to_csv('mp_res_0910.csv')
+    data_pd.to_csv('data/mp_res_0910.csv')
     print("Successfully stored!")
 
         

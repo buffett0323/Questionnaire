@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 
 
 # Pre-process
-merge_data = pd.read_csv('../Data/merge_result.csv', encoding='utf-8')
+merge_data = pd.read_csv('data/merge_result.csv', encoding='utf-8')
 
 # Select useful columns and Drop na values
 x_column = ['年齡區間.x', '城市', '教育階段.x', '性別.x', '婚姻狀態', '政治傾向', '籍貫', '已填寫問卷數量', '職業.x', 'X28.1', 'X30', 'X32', 
@@ -117,5 +117,5 @@ ohe_pd = pd.DataFrame(ohe_data, columns=ohe_cat)
 
 # Mix the data
 mix_pd = pd.concat([orig_pd, ohe_pd], axis=1).reset_index(drop=True)
-mix_pd.to_csv('data_0802.csv')
+mix_pd.to_csv('data/data_0802.csv')
 
