@@ -1,6 +1,12 @@
 ## Questionnaire
 ## Author: Buffett Liu
 
+```bash
+## Run this command on terminal
+sh run.sh
+```
+
+
 ### The steps of this program.
 #### 1. pre_process_0801.py --> doing preprocessing of raw data (merge_result.csv) and temporarily turn Y data into 0/1.
 
