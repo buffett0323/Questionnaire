@@ -6,7 +6,7 @@
 sh run.sh
 ```
 
-### The objective of the project: extract important features that significantly on behalf of the tendency people fill out the questionnaire. 
+### Extract important features that significantly on behalf of the tendency people fill out the questionnaire. 
 
 ### The steps of the whole project.
 Firstly, I do the preprocessing of the raw data (merge_result.csv) and temporarily turn Y data into a binary classification task.
