@@ -8,7 +8,7 @@ sh run.sh
 
 
 ### The steps of this program.
-#### 1. pre_process_0801.py --> doing preprocessing of raw data (merge_result.csv) and temporarily turn Y data into 0/1.
+1. pre_process_0801.py: Doing preprocessing of raw data (merge_result.csv) and temporarily turn Y data into 0/1.
 
 #### 2. get_model.py --> use Elastic Net to get best parameters for preliminary feature selections. (Get 59 features this step)
 
