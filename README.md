@@ -17,3 +17,5 @@ sh run.sh
 4. Sequentially select and add the features from the previous top 10 performances until the accuracy doesn't improve. I use 7 models to cross validate the performance. Ultimately, 
 
 5. Finally, I transform the Y data back to original data and use the Zero inflated model to evaluate the features performance.
+
+#### Also, the final result is shown in zip.ipynb.
